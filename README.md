@@ -15,7 +15,7 @@ Projekt je rozdělen do složek podle použitých technologií a úrovní testov
 
 Sada automatizovaných testů postavená na frameworku **Playwright** a jazyce **TypeScript**. Testy jsou zaměřeny na End-to-End (E2E) scénáře.
 
-### 🛠️ Technologie
+### 🛠️ Použité technologie
 * **Framework**: Playwright
 * **Jazyk**: TypeScript
 * **Návrhový vzor**: Page Object Model (POM)
