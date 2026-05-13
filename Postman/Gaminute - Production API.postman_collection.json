@@ -1,0 +1,188 @@
+{
+  "info": {
+    "_postman_id": "37674b04-28ac-4184-93e6-e16503ef1bdd",
+    "name": "Gaminute - Production API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27210730"
+  },
+  "item": [
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "Ping Homepage",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Web is running\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://www.gaminute.com/",
+              "protocol": "https",
+              "host": [
+                "www",
+                "gaminute",
+                "com"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Portfolio Data",
+      "item": [
+        {
+          "name": "Get All Games",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. ZÁKLADNÍ KONTROLY (Smoke Tests)\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is JSON\", function () {\r",
+                  "    pm.response.to.be.json;\r",
+                  "});\r",
+                  "\r",
+                  "// 2. KONTROLA RYCHLOSTI (Performance)\r",
+                  "pm.test(\"Response time is under 800ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+                  "});\r",
+                  "\r",
+                  "// 3. BYZNYS LOGIKA (Řazení her)\r",
+                  "pm.test(\"Business Logic: Live games are listed before In Dev\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    let foundInDev = false; \r",
+                  "\r",
+                  "    for (let i = 0; i < jsonData.length; i++) {\r",
+                  "        let currentStatus = jsonData[i].status;\r",
+                  "\r",
+                  "        if (currentStatus.includes(\"Dev\")) {\r",
+                  "            foundInDev = true;\r",
+                  "        } \r",
+                  "        else if (currentStatus === \"Live\" && foundInDev === true) {\r",
+                  "            pm.expect.fail(\"Error: Game '\" + jsonData[i].title + \"' (Live) is positioned AFTER 'In Dev' games.\");\r",
+                  "        }\r",
+                  "    }\r",
+                  "    pm.expect(true).to.be.true;\r",
+                  "});\r",
+                  "\r",
+                  "// 4. INTEGRITA DAT (Sanity Check)\r",
+                  "pm.test(\"Data Integrity: All games have valid Name, ID and Status\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.forEach(function(game, index) {\r",
+                  "        \r",
+                  "        pm.expect(game).to.have.property('id');\r",
+                  "        \r",
+                  "        pm.expect(game.status, \"Game at index \" + index + \" has invalid status\").to.be.oneOf([\"Live\", \"In Dev\", \"In Development\", \"Concept\"]);\r",
+                  "        \r",
+                  "        // Kontrola názvu\r",
+                  "        pm.expect(game.title).to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://www.gaminute.com/api/games?t=1768225542317",
+              "protocol": "https",
+              "host": [
+                "www",
+                "gaminute",
+                "com"
+              ],
+              "path": [
+                "api",
+                "games"
+              ],
+              "query": [
+                {
+                  "key": "t",
+                  "value": "1768225542317"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contact Form",
+      "item": [
+        {
+          "name": "Send Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status kód je 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"jsilbersky@gmail.com\",\r\n    \"message\": \"Testovací zpráva z Postmana\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://www.gaminute.com/api/contact",
+              "protocol": "https",
+              "host": [
+                "www",
+                "gaminute",
+                "com"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
