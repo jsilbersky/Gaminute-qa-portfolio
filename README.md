@@ -7,7 +7,7 @@ Tento repozitář slouží jako portfolio projektů automatizovaného testován�
 Projekt je rozdělen do složek podle použitých technologií a úrovní testování:
 
 * **[Playwright](./Playwright)**: UI automatizace webové aplikace Gaminute.
-* **Postman**: (V přípravě) Kolekce pro testování API.
+* **[Postman](Postman)**: Kolekce pro testování API.
 
 ---
 
